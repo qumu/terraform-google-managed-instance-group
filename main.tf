@@ -98,9 +98,7 @@ resource "google_compute_instance_group_manager" "default" {
   auto_healing_policies = {
     health_check      = "${
       var.health_check == "http" ? element(concat(google_compute_health_check.mig-health-check-http.*.self_link, list("")), 0) :
-      var.health_check == "https" ? element(concat(google_compute_health_check.mig-health-check-https.*.self_link, list("")), 0) :
-      var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) :
-      var.health_check == "ssl" ? element(concat(google_compute_health_check.mig-health-check-ssl.*.self_link, list("")), 0) : ""
+      var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) : ""
       }"
     initial_delay_sec = "${var.hc_initial_delay}"
   }
@@ -175,9 +173,7 @@ resource "google_compute_region_instance_group_manager" "default" {
   auto_healing_policies {
     health_check      = "${
       var.health_check == "http" ? element(concat(google_compute_health_check.mig-health-check-http.*.self_link, list("")), 0) :
-      var.health_check == "https" ? element(concat(google_compute_health_check.mig-health-check-https.*.self_link, list("")), 0) :
-      var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) :
-      var.health_check == "ssl" ? element(concat(google_compute_health_check.mig-health-check-ssl.*.self_link, list("")), 0) : ""
+      var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) : ""
       }"
     initial_delay_sec = "${var.hc_initial_delay}"
   }
@@ -201,9 +197,7 @@ resource "google_compute_region_instance_group_manager" "default" {
   timeouts = {
     create = "${
       var.health_check == "http" ||
-      var.health_check == "https" ||
-      var.health_check == "tcp" ||
-      var.health_check == "ssl" ? "15m" : "5m"
+      var.health_check == "tcp" ? "15m" : "5m"
       }"
   }
 }
@@ -274,22 +268,6 @@ resource "google_compute_health_check" "mig-health-check-http" {
   }
 }
 
-resource "google_compute_health_check" "mig-health-check-https" {
-  count   = "${var.health_check == "https" ? 1 : 0}"
-  name    = "${var.name}"
-  project = "${var.project}"
-
-  check_interval_sec  = "${var.hc_interval}"
-  timeout_sec         = "${var.hc_timeout}"
-  healthy_threshold   = "${var.hc_healthy_threshold}"
-  unhealthy_threshold = "${var.hc_unhealthy_threshold}"
-
-  https_health_check {
-    port         = "${var.hc_port == "" ? var.service_port : var.hc_port}"
-    request_path = "${var.hc_path}"
-  }
-}
-
 resource "google_compute_health_check" "mig-health-check-tcp" {
   count   = "${var.health_check == "tcp" ? 1 : 0}"
   name    = "${var.name}"
@@ -305,28 +283,10 @@ resource "google_compute_health_check" "mig-health-check-tcp" {
   }
 }
 
-resource "google_compute_health_check" "mig-health-check-ssl" {
-  count   = "${var.health_check == "ssl" ? 1 : 0}"
-  name    = "${var.name}"
-  project = "${var.project}"
-
-  check_interval_sec  = "${var.hc_interval}"
-  timeout_sec         = "${var.hc_timeout}"
-  healthy_threshold   = "${var.hc_healthy_threshold}"
-  unhealthy_threshold = "${var.hc_unhealthy_threshold}"
-
-  ssl_health_check {
-    port         = "${var.hc_port == "" ? var.service_port : var.hc_port}"
-    request_path = "${var.hc_path}"
-  }
-}
-
 resource "google_compute_firewall" "mig-health-check" {
   count   = "${
     var.health_check == "http" ||
-    var.health_check == "https" ||
-    var.health_check == "tcp" ||
-    var.health_check == "ssl" ? 1 : 0
+    var.health_check == "tcp" ? 1 : 0
     }"
   project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   name    = "${var.name}-vm-hc"
