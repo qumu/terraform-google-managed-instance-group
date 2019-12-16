@@ -260,7 +260,7 @@ variable autoscaling_lb {
 
 /* Health checks */
 variable health_check {
-  description = "Health check. Default is http. Allowable options are http, https, tcp, or ssl"
+  description = "Health check. Default is http. Allowable options are http or tcp"
   default     = "http"
 }
 

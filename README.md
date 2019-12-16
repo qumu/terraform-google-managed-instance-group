@@ -8,8 +8,8 @@ Modular Google Compute Engine managed instance group for Terraform.
 
 ```ruby
 module "mig1" {
-  source            = "GoogleCloudPlatform/managed-instance-group/google"
-  version           = "1.1.14"
+  source            = "github.com/qumu/terraform-google-managed-instance-group.git"
+  version           = "1.1.17"
   region            = "${var.region}"
   zone              = "${var.zone}"
   name              = "group1"
@@ -28,5 +28,5 @@ module "mig1" {
 ## Resources created
 
 - [`google_compute_instance_template.default`](https://www.terraform.io/docs/providers/google/r/compute_instance_template.html): The instance template assigned to the instance group.
-- [`google_compute_instance_group_manager.default`](https://www.terraform.io/docs/providers/google/r/compute_instance_group_manager.html): The instange group manager that uses the instance template and target pools. 
+- [`google_compute_instance_group_manager.default`](https://www.terraform.io/docs/providers/google/r/compute_instance_group_manager.html): The instange group manager that uses the instance template and target pools.
 - [`google_compute_firewall.default-ssh`](https://www.terraform.io/docs/providers/google/r/compute_firewall.html): Firewall rule to allow ssh access to the instances.
