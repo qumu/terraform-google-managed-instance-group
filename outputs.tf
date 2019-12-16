@@ -69,7 +69,12 @@ output network_ip {
   value       = "${var.network_ip}"
 }
 
-output health_check {
-  description = "The healthcheck for the managed instance group"
-  value       = "${element(concat(google_compute_health_check.mig-health-check.*.self_link, list("")), 0)}"
+output health_check_http {
+  description = "The http healthcheck for the managed instance group"
+  value       = "${element(concat(google_compute_health_check.mig-health-check-http.*.self_link, list("")), 0)}"
+}
+
+output health_check_tcp {
+  description = "The tcp healthcheck for the managed instance group"
+  value       = "${element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0)}"
 }

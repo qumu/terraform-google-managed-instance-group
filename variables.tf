@@ -259,9 +259,9 @@ variable autoscaling_lb {
 }
 
 /* Health checks */
-variable http_health_check {
-  description = "Enable or disable the http health check for auto healing."
-  default     = true
+variable health_check {
+  description = "Health check. Default is http. Allowable options are http or tcp"
+  default     = "http"
 }
 
 variable hc_initial_delay {
@@ -297,6 +297,12 @@ variable hc_port {
 variable hc_path {
   description = "Health check, the http path to check."
   default     = "/"
+}
+
+variable hc_request {
+  description = "Health check, the tcp request."
+  default     = ""
+
 }
 
 variable ssh_fw_rule {
