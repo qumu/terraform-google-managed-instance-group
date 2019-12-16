@@ -96,7 +96,12 @@ resource "google_compute_instance_group_manager" "default" {
   }
 
   auto_healing_policies = {
-    health_check      = "${var.health_check == "http" ? element(concat(google_compute_health_check.mig-health-check-http.*.self_link, list("")), 0) : var.health_check == "https" ? element(concat(google_compute_health_check.mig-health-check-https.*.self_link, list("")), 0) : var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) : var.health_check == "ssl" ? element(concat(google_compute_health_check.mig-health-check-ssl.*.self_link, list("")), 0) : ""}"
+    health_check      = "${
+      var.health_check == "http" ? element(concat(google_compute_health_check.mig-health-check-http.*.self_link, list("")), 0) :
+      var.health_check == "https" ? element(concat(google_compute_health_check.mig-health-check-https.*.self_link, list("")), 0) :
+      var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) :
+      var.health_check == "ssl" ? element(concat(google_compute_health_check.mig-health-check-ssl.*.self_link, list("")), 0) : ""
+      }"
     initial_delay_sec = "${var.hc_initial_delay}"
   }
 
@@ -168,7 +173,12 @@ resource "google_compute_region_instance_group_manager" "default" {
   target_size = "${var.autoscaling ? var.min_replicas : var.size}"
 
   auto_healing_policies {
-    health_check      = "${var.health_check == "http" ? element(concat(google_compute_health_check.mig-health-check-http.*.self_link, list("")), 0) : var.health_check == "https" ? element(concat(google_compute_health_check.mig-health-check-https.*.self_link, list("")), 0) : var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) : var.health_check == "ssl" ? element(concat(google_compute_health_check.mig-health-check-ssl.*.self_link, list("")), 0) : ""}"
+    health_check      = "${
+      var.health_check == "http" ? element(concat(google_compute_health_check.mig-health-check-http.*.self_link, list("")), 0) :
+      var.health_check == "https" ? element(concat(google_compute_health_check.mig-health-check-https.*.self_link, list("")), 0) :
+      var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) :
+      var.health_check == "ssl" ? element(concat(google_compute_health_check.mig-health-check-ssl.*.self_link, list("")), 0) : ""
+      }"
     initial_delay_sec = "${var.hc_initial_delay}"
   }
 
@@ -189,7 +199,12 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   // Initial instance verification can take 10-15m when a health check is present.
   timeouts = {
-    create = "${var.health_check == "http" || var.health_check == "https" || var.health_check == "tcp" || var.health_check == "ssl" ? "15m" : "5m"}"
+    create = "${
+      var.health_check == "http" ||
+      var.health_check == "https" ||
+      var.health_check == "tcp" ||
+      var.health_check == "ssl" ? "15m" : "5m"
+      }"
   }
 }
 
@@ -307,7 +322,12 @@ resource "google_compute_health_check" "mig-health-check-ssl" {
 }
 
 resource "google_compute_firewall" "mig-health-check" {
-  count   = "${var.health_check == "http" || var.health_check == "https" || var.health_check == "tcp" || var.health_check == "ssl" ? 1 : 0}"
+  count   = "${
+    var.health_check == "http" ||
+    var.health_check == "https" ||
+    var.health_check == "tcp" ||
+    var.health_check == "ssl" ? 1 : 0
+    }"
   project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   name    = "${var.name}-vm-hc"
   network = "${var.network}"
