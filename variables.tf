@@ -305,11 +305,6 @@ variable hc_request {
 
 }
 
-variable hc_response {
-  description = "Health check, the tcp response."
-  default     = ""
-}
-
 variable ssh_fw_rule {
   description = "Whether or not the SSH Firewall Rule should be created"
   default     = true
