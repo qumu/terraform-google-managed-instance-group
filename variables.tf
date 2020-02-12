@@ -309,3 +309,15 @@ variable ssh_fw_rule {
   description = "Whether or not the SSH Firewall Rule should be created"
   default     = true
 }
+
+variable enable_gpu {
+  type        = "string"
+  description = "Enable GPU"
+  default     = "0"
+}
+
+variable gpu_type {
+  type        = "string"
+  description = "GPU Type"
+  default     = "nvidia-tesla-t4"
+}
