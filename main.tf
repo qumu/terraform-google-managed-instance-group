@@ -57,9 +57,15 @@ resource "google_compute_instance_template" "default" {
     var.metadata
   )}"
 
+  guest_accelerator {
+    type  = "${var.gpu_type}"
+    count = "${var.enable_gpu}"
+  }
+
   scheduling {
-    preemptible       = "${var.preemptible}"
-    automatic_restart = "${var.automatic_restart}"
+    preemptible         = "${var.preemptible}"
+    automatic_restart   = "${var.automatic_restart}"
+    on_host_maintenance = "${var.enable_gpu == 1 ? "TERMINATE" : "MIGRATE"}"
   }
 
   lifecycle {
