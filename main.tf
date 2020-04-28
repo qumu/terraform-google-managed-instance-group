@@ -47,6 +47,11 @@ resource "google_compute_instance_template" "default" {
     mode         = "${var.mode}"
   }
 
+  disk {
+    disk_type = "local-ssd"
+    type      = "SCRATCH"
+  }
+
   service_account {
     email  = "${var.service_account_email}"
     scopes = ["${var.service_account_scopes}"]
